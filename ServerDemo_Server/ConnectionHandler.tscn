@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://chlyvkglko7bc"]
+
+[ext_resource type="Script" path="res://ConnectionHandler.gd" id="1_u1n10"]
+
+[node name="ConnectionHandler" type="Node"]
+script = ExtResource("1_u1n10")
