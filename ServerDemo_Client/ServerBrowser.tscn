@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbm28el13inyd"]
+
+[ext_resource type="Script" path="res://ServerBrowser.gd" id="1_ekjle"]
+[ext_resource type="PackedScene" uid="uid://cd7xnanlpqlv0" path="res://ServerAddressRetriever.tscn" id="2_ibl8p"]
+[ext_resource type="PackedScene" uid="uid://c43x4cqnuqrc8" path="res://ServerInfoRetriever.tscn" id="3_76u1n"]
+
+[node name="ServerBrowser" type="Node"]
+script = ExtResource("1_ekjle")
+
+[node name="ServerAddressRetriever" parent="." instance=ExtResource("2_ibl8p")]
+
+[node name="ServerInfoRetriever" parent="." instance=ExtResource("3_76u1n")]

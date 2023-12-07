@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://bs0fldym4f158"]
+
+[ext_resource type="Script" path="res://ServerBrowserUI.gd" id="1_dwja4"]
+
+[node name="ServerBrowserUI" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 200)
+script = ExtResource("1_dwja4")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 5
+
+[node name="Label_IP" type="Label" parent="GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "IP"
+horizontal_alignment = 1
+
+[node name="Label_Map" type="Label" parent="GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Map"
+horizontal_alignment = 1
+
+[node name="Label_Players" type="Label" parent="GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Players"
+horizontal_alignment = 1
+
+[node name="Label_Ping" type="Label" parent="GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Ping"
+horizontal_alignment = 1
+
+[node name="Join" type="Label" parent="GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = " 
+"
+horizontal_alignment = 1

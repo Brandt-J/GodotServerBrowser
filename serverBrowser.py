@@ -1,12 +1,3 @@
-"""
-Script to run on a accessible web server. Create a python environment (tested with python 3.9)
-and install:
-pip install Flask
-pip install APScheduler
-pip install numpy
-
-"""
-
 from __future__ import annotations
 
 from flask import Flask, request
@@ -23,26 +14,17 @@ app = Flask(__name__)
 
 serverdict: dict[str, ServerEntry] = {}
 SERVERTIMEOUTFACTOR: float = 5.0
-HOST_IP: str = "127.0.0.1"  # Add correct server IP
-HOST_PORT: int = 5000  # And port. Don't forget to open the port on the server!
-DEBUG: bool = False
+HOST_IP: str = "127.0.0.1"
+HOST_PORT: int = 5000
+DEBUG: bool = True
 disableRequestLogging: bool = True
 
 
 @dataclass
 class ServerEntry:
     ip: str
-    levelPath: str
-    numPlayers: int
-    ping: int
     maxUpdateTimesStored: int = 10
     lastUpdatesReceived: np.ndarray = np.empty(0)
-
-    def to_dict(self) -> dict:
-        return {"ip": self.ip,
-                "levelPath": self.levelPath,
-                "numPlayers": str(self.numPlayers),
-                "ping": self.ping}
 
     def get_default_request_interval(self) -> float:
         interval: float = float(np.inf)
@@ -78,20 +60,16 @@ def check_server_times() -> None:
 
 
 @app.route('/')
-def hello_world():
-    return "ServerBrowser online"
+def check_availability() -> str:
+    return "OK"
 
 
-@app.route("/set_server/<levelPath>/<int:numPlayers>/<int:ping>")
-def set_server(levelPath: str, numPlayers: int, ping: int) -> str:
+@app.route("/set_server")
+def set_server() -> str:
     ip = request.remote_addr
     if ip not in serverdict:
         logger.info(f"Adding new Server: {ip}")
-        serverdict[ip] = ServerEntry(ip, levelPath, numPlayers, ping)
-    else:
-        serverdict[ip].levelPath = levelPath
-        serverdict[ip].numPlayers = numPlayers
-        serverdict[ip].ping = ping
+        serverdict[ip] = ServerEntry(ip)
 
     serverdict[ip].add_update_time(time.time())
     return "OK"
@@ -99,7 +77,12 @@ def set_server(levelPath: str, numPlayers: int, ping: int) -> str:
 
 @app.route("/get_server_list")
 def get_server_list():
-    return [server.to_dict() for server in serverdict.values()]
+    return [server.ip for server in serverdict.values()]
+
+
+@app.route("/get_own_ip")
+def get_own_public_ip() -> str:
+    return request.remote_addr
 
 
 def get_server_scheduler() -> BackgroundScheduler:

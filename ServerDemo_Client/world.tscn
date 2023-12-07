@@ -1,0 +1,69 @@
+[gd_scene load_steps=5 format=3 uid="uid://6hjj5rgui4u3"]
+
+[ext_resource type="Script" path="res://world.gd" id="1_l26lm"]
+[ext_resource type="PackedScene" uid="uid://cbm28el13inyd" path="res://ServerBrowser.tscn" id="2_0asaj"]
+[ext_resource type="PackedScene" uid="uid://bs0fldym4f158" path="res://ServerBrowserUI.tscn" id="2_surgt"]
+[ext_resource type="PackedScene" uid="uid://djgu8d176s05b" path="res://console.tscn" id="3_s5d80"]
+
+[node name="world" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l26lm")
+
+[node name="ServerBrowser" parent="." instance=ExtResource("2_0asaj")]
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+offset_right = 55.0
+offset_bottom = 26.0
+text = "CLIENT"
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -412.0
+offset_right = 412.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ButtonDisconnect" type="Button" parent="HBox"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+text = "DISCONNECT"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="HBox/VBoxContainer"]
+layout_mode = 2
+text = "PlayerName:"
+
+[node name="LineEdit" type="LineEdit" parent="HBox/VBoxContainer"]
+layout_mode = 2
+text = "DefaultPlayer"
+caret_blink = true
+
+[node name="Label2" type="Label" parent="HBox/VBoxContainer"]
+layout_mode = 2
+text = "Available Servers:"
+
+[node name="ServerBrowserUI" parent="HBox/VBoxContainer" instance=ExtResource("2_surgt")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+
+[node name="Console" parent="HBox" instance=ExtResource("3_s5d80")]
+layout_mode = 2
+
+[connection signal="pressed" from="HBox/ButtonDisconnect" to="." method="_on_button_disconnect_pressed"]
