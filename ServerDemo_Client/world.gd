@@ -2,15 +2,18 @@ extends Node2D
 
 const DEFAULT_PORT: int = 12345
 @onready var vbox: VBoxContainer = $VBoxContainer
-@onready var serverBrowser: ServerBrowser = $VBoxContainer/ServerBrowser
+@onready var serverBrowserUI: ServerBrowserUI = $VBoxContainer/ServerBrowserUI
+@onready var serverBrowser: ServerBrowser = $ServerBrowser
+
 
 
 func _ready():
-	multiplayer.connected_to_server.connect(self.join_as_client)
+	multiplayer.connected_to_server.connect(join_as_client)
 	
-	var fakeDict: Dictionary = {"127.0.0.1": ["TinyTown", 3, 25],
-								"45.84.138.205": ["TestMap", 5, 72]}
-	serverBrowser.update_server_list(fakeDict)
+#	var fakeDict: Dictionary = {"127.0.0.1": ["TinyTown", 3, 25],
+#								"45.84.138.205": ["TestMap", 5, 72]}
+	serverBrowser.ServerDictUpdated.connect(serverBrowserUI.update_server_list)
+#	serverBrowser.update_server_list(fakeDict)
 #	join_server()
 
 

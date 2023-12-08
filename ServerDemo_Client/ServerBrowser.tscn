@@ -1,40 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://bs0fldym4f158"]
+[gd_scene load_steps=2 format=3 uid="uid://cbm28el13inyd"]
 
-[ext_resource type="Script" path="res://ServerBrowser.gd" id="1_kpwji"]
+[ext_resource type="Script" path="res://ServerBrowser.gd" id="1_ekjle"]
 
-[node name="ServerBrowser" type="Control"]
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_kpwji")
+[node name="ServerBrowser" type="Node"]
+script = ExtResource("1_ekjle")
 
-[node name="GridContainer" type="GridContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-columns = 5
+[node name="PingServersTimer" type="Timer" parent="."]
+autostart = true
 
-[node name="Label_IP" type="Label" parent="GridContainer"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "IP"
+[node name="UpdateServersTimer" type="Timer" parent="."]
+autostart = true
 
-[node name="Label_Map" type="Label" parent="GridContainer"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "Map"
-
-[node name="Label_Players" type="Label" parent="GridContainer"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "Players"
-
-[node name="Label_Ping" type="Label" parent="GridContainer"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "Ping"
-
-[node name="Join" type="Label" parent="GridContainer"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "Join
-"
+[connection signal="timeout" from="PingServersTimer" to="." method="_on_ping_servers_timer_timeout"]
+[connection signal="timeout" from="UpdateServersTimer" to="." method="_on_update_servers_timer_timeout"]
