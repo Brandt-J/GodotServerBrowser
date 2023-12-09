@@ -1,4 +1,4 @@
-extends Control
+extends PanelContainer
 class_name ServerBrowserUI
 
 
@@ -52,6 +52,7 @@ func _add_new_server(ip: String, details: Array) -> void:
 func _get_label_in_grid(labelText: String) -> Label:
 	var lbl: Label = Label.new()
 	lbl.text = labelText
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	grid.add_child(lbl)
 	lbl.set_owner(grid)
 	return lbl

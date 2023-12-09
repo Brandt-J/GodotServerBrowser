@@ -1,17 +1,88 @@
-[gd_scene load_steps=3 format=3 uid="uid://h8f4x2ev0ilf"]
+[gd_scene load_steps=5 format=3 uid="uid://h8f4x2ev0ilf"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_p8g8u"]
 [ext_resource type="PackedScene" uid="uid://chlyvkglko7bc" path="res://ConnectionHandler.tscn" id="2_ygoyi"]
+[ext_resource type="PackedScene" uid="uid://djgu8d176s05b" path="res://console.tscn" id="3_ucxy4"]
 
-[node name="world" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v4yjj"]
+bg_color = Color(0.247059, 0.247059, 0.247059, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 50.0
+expand_margin_top = 50.0
+expand_margin_right = 50.0
+expand_margin_bottom = 50.0
+
+[node name="world" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_p8g8u")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Label" type="Label" parent="VBoxContainer"]
-layout_mode = 2
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 58.0
+offset_bottom = 26.0
 text = "SERVER"
 
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.5
+offset_top = -20.0
+offset_right = 49.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_v4yjj")
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="LabelPlayer" type="Label" parent="PanelContainer/GridContainer"]
+layout_mode = 2
+text = "NumPlayers:"
+
+[node name="LabelNumPlayers" type="Label" parent="PanelContainer/GridContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="LabelMap" type="Label" parent="PanelContainer/GridContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Map:
+"
+
+[node name="MapSelector" type="OptionButton" parent="PanelContainer/GridContainer"]
+layout_mode = 2
+item_count = 3
+selected = 0
+popup/item_0/text = "CrazyMap"
+popup/item_0/id = 0
+popup/item_1/text = "SuperMap"
+popup/item_1/id = 1
+popup/item_2/text = "AwesomeMap"
+popup/item_2/id = 2
+
 [node name="ConnectionHandler" parent="." instance=ExtResource("2_ygoyi")]
+
+[node name="Console" parent="." instance=ExtResource("3_ucxy4")]
+layout_mode = 1
+offset_left = -300.0

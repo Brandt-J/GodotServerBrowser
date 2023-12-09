@@ -1,33 +1,37 @@
-extends Node2D
+extends Control
 
 const DEFAULT_PORT: int = 12345
-@onready var vbox: VBoxContainer = $VBoxContainer
-@onready var serverBrowserUI: ServerBrowserUI = $VBoxContainer/ServerBrowserUI
+@onready var serverBrowserUI: ServerBrowserUI = $ServerBrowserUI
 @onready var serverBrowser: ServerBrowser = $ServerBrowser
+@onready var console: Console = $Console
+@onready var btnDisconnect: Button = $ButtonDisconnect
 
 
 
 func _ready():
 	multiplayer.connected_to_server.connect(join_as_client)
-	
-#	var fakeDict: Dictionary = {"127.0.0.1": ["TinyTown", 3, 25],
-#								"45.84.138.205": ["TestMap", 5, 72]}
 	serverBrowser.ServerDictUpdated.connect(serverBrowserUI.update_server_list)
-#	serverBrowser.update_server_list(fakeDict)
-#	join_server()
+	serverBrowserUI.JoinBtnClicked.connect(_join_server)
+	serverBrowser.start()
+	console.print_to_console("Server Browser started")
 
 
-func join_server() -> void:
+func _join_server(ip: String) -> void:
+	serverBrowserUI.hide()
+	btnDisconnect.show()
+	serverBrowser.stop()
+	console.print_to_console("Server Browser stopped")
+	
 	var peer = ENetMultiplayerPeer.new()
-	peer.create_client('127.0.0.1', DEFAULT_PORT)
+	peer.create_client(ip, DEFAULT_PORT)
 	multiplayer.multiplayer_peer = peer
-	_print_to_vbox("Joining Server")
+	console.print_to_console("Joining Server")
 
 
 func join_as_client() -> void:
-	_print_to_vbox("Connection established, calling to spawn player")
+	console.print_to_console("Connection established, calling to spawn player")
 	var client_id: int = multiplayer.get_unique_id()
-	var player_name: String = "Test_Player"
+	var player_name: String = "DefaultPlayer"
 	rpc_id(1, "server_spawn_player", client_id, player_name)
 	
 
@@ -38,13 +42,15 @@ func server_spawn_player(client_id: int, player_name: String) -> void:
 
 @rpc
 func create_player_node() -> void:
-	_print_to_vbox("Now actually running code to create the player here")
+	console.print_to_console("Now actually running code to create the player here")
 	
 
-func _print_to_vbox(text: String) -> void:
-	print(text)
-	var newLbl: Label = Label.new()
-	newLbl.text = text
-	vbox.add_child(newLbl)
-	newLbl.set_owner(vbox)
+
+func _on_button_disconnect_pressed():
+	console.print_to_console("Disconnecting from Server")
+	multiplayer.multiplayer_peer = null
+	btnDisconnect.hide()
+	serverBrowserUI.show()
+	serverBrowser.start()
+	console.print_to_console("Server Browser started")
 	

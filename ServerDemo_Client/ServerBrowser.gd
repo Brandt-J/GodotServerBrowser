@@ -9,6 +9,9 @@ var connected: bool = false
 var serverList: Array = ["127.0.0.1", "45.84.138.205"]
 var pingObjects: Dictionary = {}  # Key: IP, val: PingServerObjects
 
+@onready var timerPingServers = $PingServersTimer
+@onready var TimerUpdateServers = $UpdateServersTimer
+
 
 enum UDPState {AwaitingConnection,
 			   ReadyToSendPackage,
@@ -26,7 +29,7 @@ class PingServerObjects:
 	var udp: PacketPeerUDP
 	var t0: int = -1
 	var state: UDPState
-	var packetString: String
+	var receivedString: String
 	var ping: int = -1
 	
 	func _init(ping_ip: String, ping_timer: Timer) -> void:
@@ -34,7 +37,6 @@ class PingServerObjects:
 		timer = ping_timer
 		udp = PacketPeerUDP.new()
 		state = UDPState.Disconnected
-		packetString = "%s" % randi_range(0, 5000)
 
 	func connect_and_prepare_sending_package() -> void:
 		if state != UDPState.Disconnected:  # i.e., got stuck somewhere
@@ -47,16 +49,28 @@ class PingServerObjects:
 		
 	func try_sending_package() -> void:
 		if udp.is_socket_connected():
-			udp.put_packet(packetString.to_utf8_buffer())
+			udp.put_packet("0".to_utf8_buffer())
 			state = UDPState.AwaitingAnswer
 			t0 = Time.get_ticks_msec()
 		
 	func try_receiving_package() -> void:
 		if udp.get_available_packet_count() > 0:
+			var packet: PackedByteArray = udp.get_packet()
+			receivedString = packet.get_string_from_utf8()
 			ping = Time.get_ticks_msec() - t0
 			udp.close()
 			state = UDPState.Disconnected
-		
+
+
+func start() -> void:
+	timerPingServers.start()
+	TimerUpdateServers.start()
+	
+
+func stop() -> void:
+	timerPingServers.stop()
+	TimerUpdateServers.stop()
+
 
 func ping_server(ip: String) -> void:
 	if not ip in pingObjects:
@@ -79,10 +93,11 @@ func _process(_delta: float) -> void:
 
 func _on_update_servers_timer_timeout():
 	var curServers: Dictionary = {}
-	randomize()
 	for pingObject in pingObjects.values():
-		curServers[pingObject.ip] = ["Tiny Town", randi_range(2, 5), pingObject.ping]
-		print("Server %s: State: %s, Ping: %s" % [pingObject.ip, pingObject.state, pingObject.ping])
+		if pingObject.ping >= 0:
+			var mapName: String = pingObject.receivedString.split("_")[0]
+			var numPlayers: String = pingObject.receivedString.split("_")[1]
+			curServers[pingObject.ip] = [mapName, numPlayers, pingObject.ping]
 	ServerDictUpdated.emit(curServers)
 
 	
