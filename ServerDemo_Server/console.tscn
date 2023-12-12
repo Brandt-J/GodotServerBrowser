@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://djgu8d176s05b"]
+[gd_scene load_steps=3 format=3 uid="uid://djgu8d176s05b"]
 
+[ext_resource type="StyleBox" uid="uid://m55mdo16tx2f" path="res://stylebox_panel.tres" id="1_8d4pa"]
 [ext_resource type="Script" path="res://console.gd" id="1_e2ytj"]
 
 [node name="Console" type="PanelContainer"]
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_8d4pa")
 script = ExtResource("1_e2ytj")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]

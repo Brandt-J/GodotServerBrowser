@@ -3,10 +3,10 @@ class_name world
 
 
 const DEFAULT_PORT: int = 12345
-var connectedPeers: Array = []
-@onready var console: Console = $Console
-@onready var btnMapSelector: OptionButton = $PanelContainer/GridContainer/MapSelector
-@onready var lblNumPlayers: Label = $PanelContainer/GridContainer/LabelNumPlayers
+var connectedPeers: Dictionary = {}  # key: id, val: playerName
+@onready var console: Console = $HBox/Console
+@onready var btnMapSelector: OptionButton = $HBox/PanelContainer/GridContainer/MapSelector
+@onready var lblNumPlayers: Label = $HBox/PanelContainer/GridContainer/LabelNumPlayers
 @onready var connectionHandler: ConnectionHandler = $ConnectionHandler
 
 
@@ -26,14 +26,14 @@ func start_server() -> void:
 	
 
 func _peer_connected(id: int) -> void:
-	connectedPeers.append(id)
+	connectedPeers[id] = "UnknownPlayer"
 	console.print_to_console("Peer %s connected." % id)
 	lblNumPlayers.text = "%s" % connectedPeers.size()
 	
 	
 func _peer_disconnected(id: int) -> void:
+	console.print_to_console("Player %s disconnected." % connectedPeers[id])
 	connectedPeers.erase(id)
-	console.print_to_console("Peer %s disconnected." % id)
 	lblNumPlayers.text = "%s" % connectedPeers.size()
 
 
@@ -48,9 +48,4 @@ func get_num_players() -> int:
 @rpc("any_peer")
 func server_spawn_player(client_id: int, player_name: String) -> void:
 	console.print_to_console("Spawning %s on network ID %s" % [player_name, client_id])
-	rpc_id(client_id, "create_player_node")
-
-
-@rpc
-func create_player_node() -> void:
-	pass
+	connectedPeers[client_id] = player_name

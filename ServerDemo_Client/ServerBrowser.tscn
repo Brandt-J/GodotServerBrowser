@@ -11,5 +11,8 @@ autostart = true
 [node name="UpdateServersTimer" type="Timer" parent="."]
 autostart = true
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [connection signal="timeout" from="PingServersTimer" to="." method="_on_ping_servers_timer_timeout"]
 [connection signal="timeout" from="UpdateServersTimer" to="." method="_on_update_servers_timer_timeout"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]

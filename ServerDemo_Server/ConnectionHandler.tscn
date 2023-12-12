@@ -4,3 +4,12 @@
 
 [node name="ConnectionHandler" type="Node"]
 script = ExtResource("1_u1n10")
+
+[node name="PushUpdateTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+timeout = 3.0
+
+[connection signal="timeout" from="PushUpdateTimer" to="." method="_on_push_update_timer_timeout"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
