@@ -24,7 +24,7 @@ func set_world_parent(worldNode: world) -> void:
 	worldParent = worldNode
 	
 
-func _process(delta):
+func _process(_delta):
 	server.poll() # Important!
 	if server.is_connection_available():
 		var peer: PacketPeerUDP = server.take_connection()
@@ -49,7 +49,7 @@ func _on_push_update_timer_timeout():
 			serverBrowserReached = false
 
 
-func _on_http_request_request_completed(result, response_code, headers, body):
+func _on_http_request_request_completed(_result, _response_code, _headers, body):
 	var response: String = body.get_string_from_utf8()
 	
 	if not serverBrowserReached and response == "OK":
