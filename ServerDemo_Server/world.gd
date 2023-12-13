@@ -14,6 +14,7 @@ func _ready():
 	multiplayer.peer_connected.connect(_peer_connected)
 	multiplayer.peer_disconnected.connect(_peer_disconnected)
 	connectionHandler.set_world_parent(self)
+	connectionHandler.ConsoleMessage.connect(_display_message)
 	start_server()
 	
 
@@ -49,3 +50,7 @@ func get_num_players() -> int:
 func server_spawn_player(client_id: int, player_name: String) -> void:
 	console.print_to_console("Spawning %s on network ID %s" % [player_name, client_id])
 	connectedPeers[client_id] = player_name
+	
+	
+func _display_message(msg: String) -> void:
+	console.print_to_console(msg)

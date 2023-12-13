@@ -6,6 +6,8 @@ const PORT_SERVER_BROWSER: int = 5000
 const IP_SERVER_BROWSER: String = "127.0.0.1"
 
 var ownIP: String = "unknown"
+var serverBrowserReached: bool = false
+var fistConnectAttempt: bool = true
 
 @onready var httpRequest: HTTPRequest = $HTTPRequest
 @onready var timerUpdateServer_ips: Timer = $TimerUpdateServerIPs
@@ -34,30 +36,41 @@ func _on_timer_update_server_i_ps_timeout():
 		if error != OK:
 			ConsoleMessage.emit("Error connecting serverBrowser! ErrorCode: %s" % error)
 
-	elif status == HTTPClient.STATUS_REQUESTING:
-		ConsoleMessage.emit("Not sending update to ServerBrowser, request still pending")
 	else:
-		ConsoleMessage.emit("Not requesting, state is %s" % status)
+		if serverBrowserReached:
+			ConsoleMessage.emit("Lost connection to remote ServerBrowser")
+			serverBrowserReached = false
 
 
 func _on_http_request_request_completed(result, _response_code, _headers, body):
-	if result != 0:
-		ConsoleMessage.emit("Could not receive info from ServerBrowser")
-		return
-	
-	if ownIP == "unknown":
-		ownIP = body.get_string_from_utf8()
-	else:
-		_update_server_list(body.get_string_from_utf8())
-
-
-func _update_server_list(string_from_server: String) -> void:
+	var validResponse: bool = result == 0
+	var responseString: String = body.get_string_from_utf8()
 	var serverList = ["127.0.0.1"]  # we always include the localhost address
+
+	if not serverBrowserReached and validResponse:
+		ConsoleMessage.emit("Established connection to remote ServerBrowser.\nScanning for remote servers.")
+		serverBrowserReached = true
+
+	elif fistConnectAttempt and not validResponse:
+		ConsoleMessage.emit("Connection to serverbrowser not possible.\nCan only search for locally hosted servers.")
+	
+	if validResponse:
+		if ownIP == "unknown":
+			ownIP = responseString
+		else:
+			serverList.append_array(_get_remote_servers(responseString))
+	
+	ServerListUpdated.emit(serverList)
+	fistConnectAttempt = false
+
+
+func _get_remote_servers(string_from_server: String) -> Array:
+	var remoteServers: Array = []
 	var json: JSON = JSON.new()
 	json.parse(string_from_server)
 	var listFromServer: Array = json.get_data()
 	for ip in listFromServer:
 		if ip != ownIP:  # but skip the localhost here
-			serverList.append(ip)
+			remoteServers.append(ip)
 	
-	ServerListUpdated.emit(serverList)
+	return remoteServers

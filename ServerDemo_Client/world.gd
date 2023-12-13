@@ -17,6 +17,7 @@ func _ready():
 	multiplayer.connected_to_server.connect(join_as_client)
 	multiplayer.server_disconnected.connect(_disconnect_from_server)
 	serverBrowser.ServerDictUpdated.connect(serverBrowserUI.update_server_list)
+	serverBrowser.ConsoleMessage.connect(_print_to_console)
 	serverBrowserUI.JoinBtnClicked.connect(_join_server)
 	
 	serverBrowser.start()
@@ -59,3 +60,6 @@ func _disconnect_from_server() -> void:
 	serverBrowser.start()
 	console.print_to_console("Server Browser started")
 	
+
+func _print_to_console(message: String) -> void:
+	console.print_to_console(message)

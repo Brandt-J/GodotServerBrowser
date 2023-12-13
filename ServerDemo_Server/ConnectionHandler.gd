@@ -9,8 +9,11 @@ var server := UDPServer.new()
 var worldParent: world
 
 var serverBrowserReached: bool = false
+var fistConnectAttempt: bool = true
 
 @onready var httpRequest: HTTPRequest = $HTTPRequest
+
+signal ConsoleMessage(msg)
 
 
 func _ready():
@@ -38,17 +41,22 @@ func _on_push_update_timer_timeout():
 		var request: String = "http://%s:%s/set_server" % [IP_SERVER_BROWSER, PORT_SERVER_BROWSER]
 		var error = httpRequest.request(request)
 		if error != OK:
-			print("Error connecting to SeverBrowser. ErrorCode: %s" % error)
-			
-	elif status == HTTPClient.STATUS_REQUESTING:
-		print("Not sending update to ServerBrowser, request still pending.")
-	elif status == HTTPClient.STATUS_CONNECTING:
-		print("Connection to ServerBrowser not yet established.")
+			ConsoleMessage.emit("Error connecting to SeverBrowser. ErrorCode: %s" % error)
+	
 	else:
-		print("Not requesting, state is %s" % status)
+		if serverBrowserReached:
+			ConsoleMessage.emit("Lost connection to remote ServerBrowser\nOnly scanning for local servers.")
+			serverBrowserReached = false
 
 
 func _on_http_request_request_completed(result, response_code, headers, body):
 	var response: String = body.get_string_from_utf8()
-	if response != "OK":
-		print("Error pushing server state to ServerBrowser. Response: %s" % response)
+	
+	if not serverBrowserReached and response == "OK":
+		ConsoleMessage.emit("Established connection to remote ServerBrowser")
+		serverBrowserReached = true
+		
+	elif fistConnectAttempt and response != "OK":
+		ConsoleMessage.emit("Connection to serverbrowser not possible")
+
+	fistConnectAttempt = false
