@@ -5,7 +5,7 @@ const DEFAULT_PORT: int = 12345
 @onready var serverBrowserUI: ServerBrowserUI = $HBox/VBoxContainer/ServerBrowserUI
 @onready var serverBrowser: ServerBrowser = $ServerBrowser
 @onready var console: Console = $HBox/Console
-@onready var btnDisconnect: Button = $ButtonDisconnect
+@onready var btnDisconnect: Button = $HBox/ButtonDisconnect
 @onready var lineEdit: LineEdit = $HBox/VBoxContainer/LineEdit
 
 
@@ -43,7 +43,7 @@ func join_as_client() -> void:
 	
 
 @rpc("any_peer")
-func server_spawn_player(client_id: int, player_name: String) -> void:
+func server_spawn_player(_client_id: int, _player_name: String) -> void:
 	pass
 
 

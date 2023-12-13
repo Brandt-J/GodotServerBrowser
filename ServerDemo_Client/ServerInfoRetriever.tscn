@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c43x4cqnuqrc8"]
+
+[ext_resource type="Script" path="res://ServerInfoRetriever.gd" id="1_3fl7i"]
+
+[node name="ServerInfoRetriever" type="Node"]
+script = ExtResource("1_3fl7i")
+
+[node name="TimerUpdateServerDict" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="TimerUpdateServerDict" to="." method="_on_timer_update_server_dict_timeout"]

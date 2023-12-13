@@ -37,7 +37,6 @@ func _on_push_update_timer_timeout():
 	if status == HTTPClient.STATUS_DISCONNECTED:
 		var request: String = "http://%s:%s/set_server" % [IP_SERVER_BROWSER, PORT_SERVER_BROWSER]
 		var error = httpRequest.request(request)
-		print("HTTPRequest was disconnected, sending a request")
 		if error != OK:
 			print("Error connecting to SeverBrowser. ErrorCode: %s" % error)
 			

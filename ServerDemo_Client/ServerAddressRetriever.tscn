@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://cd7xnanlpqlv0"]
+
+[ext_resource type="Script" path="res://ServerAddressRetriever.gd" id="1_skaj2"]
+
+[node name="ServerAddressRetriever" type="Node"]
+script = ExtResource("1_skaj2")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+timeout = 2.0
+
+[node name="TimerUpdateServerIPs" type="Timer" parent="."]
+autostart = true
+
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
+[connection signal="timeout" from="TimerUpdateServerIPs" to="." method="_on_timer_update_server_i_ps_timeout"]
