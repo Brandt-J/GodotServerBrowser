@@ -43,7 +43,7 @@ func _on_push_update_timer_timeout():
 		if error != OK:
 			ConsoleMessage.emit("Error connecting to SeverBrowser. ErrorCode: %s" % error)
 	
-	else:
+	elif status != HTTPClient.STATUS_CONNECTING:
 		if serverBrowserReached:
 			ConsoleMessage.emit("Lost connection to remote ServerBrowser\nOnly scanning for local servers.")
 			serverBrowserReached = false

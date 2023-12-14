@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 serverdict: dict[str, ServerEntry] = {}
 SERVERTIMEOUTFACTOR: float = 5.0
-HOST_IP: str = "127.0.0.1"   #"45.84.138.205"
+HOST_IP: str = "127.0.0.1"
 HOST_PORT: int = 5000
 DEBUG: bool = True
 disableRequestLogging: bool = True

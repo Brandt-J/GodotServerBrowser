@@ -22,6 +22,8 @@ func start() -> void:
 	
 func stop() -> void:
 	timerUpdateServer_ips.stop()
+	serverBrowserReached = false
+	fistConnectAttempt = true
 
 
 func _on_timer_update_server_i_ps_timeout():
@@ -36,9 +38,9 @@ func _on_timer_update_server_i_ps_timeout():
 		if error != OK:
 			ConsoleMessage.emit("Error connecting serverBrowser! ErrorCode: %s" % error)
 
-	else:
+	elif status != HTTPClient.STATUS_CONNECTING:
 		if serverBrowserReached:
-			ConsoleMessage.emit("Lost connection to remote ServerBrowser")
+			ConsoleMessage.emit("Lost connection to remote ServerBrowser, status is: %s" % status)
 			serverBrowserReached = false
 
 
@@ -48,11 +50,11 @@ func _on_http_request_request_completed(result, _response_code, _headers, body):
 	var serverList = ["127.0.0.1"]  # we always include the localhost address
 
 	if not serverBrowserReached and validResponse:
-		ConsoleMessage.emit("Established connection to remote ServerBrowser.\nScanning for remote servers.")
+		ConsoleMessage.emit("Established connection to remote ServerBrowser:\nScanning for remote servers.")
 		serverBrowserReached = true
 
 	elif fistConnectAttempt and not validResponse:
-		ConsoleMessage.emit("Connection to serverbrowser not possible.\nCan only search for locally hosted servers.")
+		ConsoleMessage.emit("Connection to serverbrowser not possible:\nCan only search for locally hosted servers.")
 	
 	if validResponse:
 		if ownIP == "unknown":
