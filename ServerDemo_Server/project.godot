@@ -13,5 +13,5 @@ config_version=5
 config/name="Godot 4 Network Server"
 config/tags=PackedStringArray("tests")
 run/main_scene="res://world.tscn"
-config/features=PackedStringArray("4.1", "Forward Plus")
+config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
